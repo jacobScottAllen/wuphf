@@ -23,11 +23,11 @@ class VolumeChecker:
         self.sleep_sec = 1
         self.threshold = threshold
 
-    def check_volume(self, _, _, _, _):
+    def check_volume(self, *_):
         """Sends an OMF message if the volume threshold is exceeded
     
         Arguments:
-            The _ are unused parameters passed in by the callback
+            The *_ parameters passed in by the callback are unused
         """
         volume_norm = np.linalg.norm(indata) * self.scaling_factor
         
