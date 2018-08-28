@@ -6,19 +6,7 @@ class eds_wrapper:
     def __init__(self):
         self.digest_config_file()
 
-        type_properties = {
-            "timestamp":{
-                "type":"string",
-                "format": "date-time",
-                "isindex":True
-            },
-            "sound level":{
-                "type":"number",
-                "format":"float64"
-            }
-        }
-
-        self.omf_type = self.get_omf_type_json("wuphf", "dynamic", type_properties)
+        self.set_up_type()
 
         self.omf_container = [{
             "id": "dining room",
@@ -47,7 +35,23 @@ class eds_wrapper:
         print("Using " + self.config["endpoint"] + " as the endoint")
 
     def set_up_type(self):
-        header = get_omf_header_json("type", "create")
+        header = self.get_omf_header_json("type", "create")
+        
+        type_properties = {
+            "timestamp":{
+                "type":"string",
+                "format": "date-time",
+                "isindex":True
+            },
+            "sound level":{
+                "type":"number",
+                "format":"float64"
+            }
+        }
+
+        omf_type = self.get_omf_type_json("wuphf", "dynamic", type_properties)
+
+        self.send_omf_post(header,omf_type, "create")
 
     def get_omf_header_json(self, messagetype, action):
         # Defaults that may get exposed to parameters later
@@ -82,12 +86,12 @@ class eds_wrapper:
         response = requests.post(
             self.config["endpoint"],
             headers = headers,
-            data = body,
+            json = body,
             verify = False,
             timeout = timout_in_seconds
         )
 
-        print("Response code: " + response.status_code)
+        print("Response code: " + str(response.status_code))
 
     
 
