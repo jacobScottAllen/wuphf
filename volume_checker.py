@@ -9,16 +9,18 @@ from omf import OMF
 class VolumeChecker:
     """[summary]
     """
-    def __init__(self, omf: OMF, scaling_factor: float, threshold: float):
+    def __init__(self, omf: OMF, scaling_factor: float, threshold: float, sleep_sec = 1):
         """
         Arguments:
             omf {OMF} -- The omf messenger
             scaling_factor {float} -- The amount to scale the volume by
+            sleep_sec {int} -- How many seconds to sleep after sending a message
             threshold {float} -- The volume threshold to trigger at
         """
         self._last_volume_norm = 0
         self.omf = omf
         self.scaling_factor = scaling_factor
+        self.sleep_sec = 1
         self.threshold = threshold
 
     def check_volume(self, indata, frames, time, status):
@@ -33,7 +35,8 @@ class VolumeChecker:
             self.omf.insert_value(volume_norm)
             # TODO: Read from GPIO sensors  
         
-        _last_volume_norm = volume_norm  
+        self._last_volume_norm = volume_norm
+        time.sleep(self.sleep_sec)
 
     def listen_forever(self):
         """Lets the callback listen indefinitely
