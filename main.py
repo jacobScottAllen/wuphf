@@ -1,6 +1,7 @@
 from omf import OMF
 from volume_checker import VolumeChecker
 
+
 def main():
     omf = OMF()
     volume_checker = VolumeChecker(omf, scaling_factor=10, threshold=5)
