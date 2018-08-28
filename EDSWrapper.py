@@ -1,24 +1,24 @@
 import json
 from datetime import datetime
+import requests
 
 class eds_wrapper:
     def __init__(self):
-        self.omf_type = [{
-            "id": "wuphf",
-            "type": "object",
-            "classification": "dynamic",
-            "properties":{
-                "timestamp":{
-                    "type":"string",
-                    "format": "date-time",
-                    "isindex":True
-                },
-                "sound level":{
-                    "type":"number",
-                    "format":"float64"
-                }
+        self.digest_config_file()
+
+        type_properties = {
+            "timestamp":{
+                "type":"string",
+                "format": "date-time",
+                "isindex":True
+            },
+            "sound level":{
+                "type":"number",
+                "format":"float64"
             }
-        }]
+        }
+
+        self.omf_type = self.get_omf_type_json("wuphf", "dynamic", type_properties)
 
         self.omf_container = [{
             "id": "dining room",
@@ -37,7 +37,58 @@ class eds_wrapper:
             }]
         }]
 
-        write_json_to_file(omf_value)
+
+    def digest_config_file(self):
+        config_file = "config.json"
+        
+        with open(config_file, "r") as read_file:
+            self.config = json.load(read_file)
+
+        print("Using " + self.config["endpoint"] + " as the endoint")
+
+    def set_up_type(self):
+        header = get_omf_header_json("type", "create")
+
+    def get_omf_header_json(self, messagetype, action):
+        # Defaults that may get exposed to parameters later
+        messageformat = "JSON"
+        omfversion = "1.0"
+        compression = "none"
+
+        header = {
+            "producertoken": self.config["producer token"],
+            "messagetype":messagetype,
+            "action":action,
+            "messageformat":messageformat,
+            "omfversion":omfversion,
+            "compression":compression
+        }
+
+        return header
+
+    def get_omf_type_json(self, id, classification, properties):
+        type_body = [{
+            "id":id,
+            "type": "object",
+            "classification": classification,
+            "properties":properties
+        }]
+
+        return type_body
+
+    def send_omf_post(self, headers, body, message_type):
+        timout_in_seconds = 10
+
+        response = requests.post(
+            self.config["endpoint"],
+            headers = headers,
+            data = body,
+            verify = False,
+            timeout = timout_in_seconds
+        )
+
+        print("Response code: " + response.status_code)
+
     
 
 
