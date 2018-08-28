@@ -7,11 +7,8 @@ class eds_wrapper:
         self.digest_config_file()
 
         self.set_up_type()
-
-        self.omf_container = [{
-            "id": "dining room",
-            "typeid": "wuphf"
-        }]
+        self.set_up_container()
+        self.insert_value(21)
 
     def insert_value(self, value, containerid = "dining room", timestamp = None):
         if timestamp is None:
@@ -24,6 +21,11 @@ class eds_wrapper:
                 "sound level":str(value)
             }]
         }]
+
+        header = self.get_omf_header_json("data", "create")
+        body = omf_value
+
+        self.send_omf_post(header, body, "data")
 
 
     def digest_config_file(self):
@@ -52,6 +54,21 @@ class eds_wrapper:
         omf_type = self.get_omf_type_json("wuphf", "dynamic", type_properties)
 
         self.send_omf_post(header,omf_type, "create")
+    
+    def set_up_container(self):
+        header = self.get_omf_header_json("container", "create")
+        
+        body = self.get_omf_container_json("wuphf", "dining room")
+
+        self.send_omf_post(header, body, "create")
+
+    def get_omf_container_json(self, typeid, containerid):
+        omf_container = [{
+            "id": containerid,
+            "typeid": typeid
+        }]
+
+        return omf_container
 
     def get_omf_header_json(self, messagetype, action):
         # Defaults that may get exposed to parameters later
