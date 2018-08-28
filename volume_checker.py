@@ -35,9 +35,9 @@ class VolumeChecker:
         if (volume_norm >= self.threshold and self._last_volume_norm < self.threshold):
             self.omf.insert_value(volume_norm)
             # TODO: Read from GPIO sensors  
+            time.sleep(self.sleep_sec)
         
         self._last_volume_norm = volume_norm
-        time.sleep(self.sleep_sec)
 
     def listen_forever(self):
         """Lets the callback listen indefinitely
