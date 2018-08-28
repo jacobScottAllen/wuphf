@@ -1,17 +1,25 @@
 import json
 from datetime import datetime
 import requests
+import urllib3
 
-class eds_wrapper:
+
+class OMF:
     def __init__(self):
+        # disable warnings for insecure requests
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        
         self.digest_config_file()
 
         self.set_up_type()
         self.set_up_container()
 
-    def insert_value(self, value, containerid = "dining room", timestamp = None):
+    def insert_value(self, value:float, containerid:str = None, timestamp: str = None):
         if timestamp is None:
             timestamp = datetime.now()
+
+        if containerid is None:
+            containerid = self.config["location"]
 
         omf_value = [{
             "containerid": containerid,
@@ -34,6 +42,7 @@ class eds_wrapper:
             self.config = json.load(read_file)
 
         print("Using " + self.config["endpoint"] + " as the endoint")
+        print("This pi is in " + self.config["location"])
 
     def set_up_type(self):
         header = self.get_omf_header_json("type", "create")
@@ -99,6 +108,7 @@ class eds_wrapper:
     def send_omf_post(self, headers, body, message_type):
         timout_in_seconds = 10
 
+        print("Sending a post request:")
         response = requests.post(
             self.config["endpoint"],
             headers = headers,
@@ -108,7 +118,6 @@ class eds_wrapper:
         )
 
         print("Response code: " + str(response.status_code))
-
     
 def write_json_to_file(json_string):
     with open("data_file.json", "w") as write_file:
