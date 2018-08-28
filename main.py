@@ -9,7 +9,7 @@ def main():
         try:
             volume_checker.listen_forever()
         except Exception as ex:
-            print(f"Listener crashed and will now restart. Error was: {ex}.")
+            print("Listener crashed and will now restart. Error was: " + {ex} + ".")
 
 
 if __name__ == "__main__":

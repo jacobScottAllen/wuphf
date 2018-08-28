@@ -1,6 +1,6 @@
 import time
 
-import numpy as numpy
+import numpy as np
 import sounddevice as sd
 
 from omf import OMF
@@ -29,7 +29,7 @@ class VolumeChecker:
         """
         volume_norm = np.linalg.norm(indata) * self.scaling_factor
         
-        if (volume_norm >= self.threshold && _last_volume_norm < self.threshold):
+        if (volume_norm >= self.threshold and self._last_volume_norm < self.threshold):
             self.omf.insert_value(volume_norm)
             # TODO: Read from GPIO sensors  
         
