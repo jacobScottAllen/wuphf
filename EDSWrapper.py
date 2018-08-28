@@ -8,7 +8,6 @@ class eds_wrapper:
 
         self.set_up_type()
         self.set_up_container()
-        self.insert_value(21)
 
     def insert_value(self, value, containerid = "dining room", timestamp = None):
         if timestamp is None:
@@ -111,8 +110,6 @@ class eds_wrapper:
         print("Response code: " + str(response.status_code))
 
     
-
-
 def write_json_to_file(json_string):
     with open("data_file.json", "w") as write_file:
         json.dump(json_string, write_file)
