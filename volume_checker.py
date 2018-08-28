@@ -7,7 +7,7 @@ from omf import OMF
 
 
 class VolumeChecker:
-    """[summary]
+    """Class for reporting loud volumes
     """
     def __init__(self, omf: OMF, scaling_factor: float, threshold: float, sleep_sec = 1):
         """
@@ -41,9 +41,6 @@ class VolumeChecker:
 
     def listen_forever(self):
         """Lets the callback listen indefinitely
-        
-        Arguments:
-            omf {OMF} -- The omf instance passed into the callback
         """
         with sd.InputStream(callback=self.check_volume):
             # Just wait forever
