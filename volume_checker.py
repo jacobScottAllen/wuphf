@@ -42,7 +42,7 @@ class VolumeChecker:
         
         if (volume_norm >= self.threshold and self._last_volume_norm < self.threshold):
             self.omf.insert_value(volume_norm)
-            if (self.callback is not None)
+            if (self.callback is not None):
                 self.callback()
         
         self._last_volume_norm = volume_norm
