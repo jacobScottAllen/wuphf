@@ -1,4 +1,4 @@
-.vscode/
+.vscode/*
 *.json
 
 # Byte-compiled / optimized / DLL files
@@ -105,3 +105,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+config.json
